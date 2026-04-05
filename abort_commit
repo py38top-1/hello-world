@@ -1,0 +1,13 @@
+Abort a commit in `commit`
+
+```bash
+
+touch new_file
+
+git add new_file
+
+git commit
+
+# Don’t type anything; leave the message empty and leave.
+
+```
