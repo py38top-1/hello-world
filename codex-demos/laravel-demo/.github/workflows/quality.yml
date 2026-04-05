@@ -1,0 +1,46 @@
+name: Laravel Quality Gate
+
+on:
+  push:
+    paths:
+      - '**/*.php'
+      - '.github/workflows/quality.yml'
+      - 'AGENTS.md'
+      - 'docs/**'
+      - 'plans/**'
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        if: ${{ hashFiles('**/composer.json') != '' }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install dependencies
+        if: ${{ hashFiles('**/composer.json') != '' }}
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Lint PHP files
+        run: |
+          if ls *.php >/dev/null 2>&1; then
+            for file in *.php; do php -l "$file"; done
+          else
+            echo "No root PHP files to lint"
+          fi
+
+      - name: Run Laravel checks when available
+        run: |
+          if [ -f artisan ]; then
+            php artisan --version
+            if php artisan list | grep -q "test"; then
+              php artisan test --stop-on-failure
+            fi
+          else
+            echo "No artisan file found, skipping framework checks"
+          fi

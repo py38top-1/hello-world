@@ -1,0 +1,41 @@
+name: FastAPI Quality Gate
+
+on:
+  push:
+    paths:
+      - '**.py'
+      - '.github/workflows/quality.yml'
+      - 'AGENTS.md'
+      - 'docs/**'
+      - 'plans/**'
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install minimal tooling
+        run: pip install pytest ruff
+
+      - name: Lint when Python files exist
+        run: |
+          if compgen -G "*.py" > /dev/null; then
+            ruff check .
+          else
+            echo "No Python files found, skipping ruff"
+          fi
+
+      - name: Run tests when tests directory exists
+        run: |
+          if [ -d tests ]; then
+            pytest -q
+          else
+            echo "No tests directory, skipping pytest"
+          fi
