@@ -1,1 +1,5 @@
 Feature A
+
+---
+
+fix B
