@@ -1,0 +1,30 @@
+codex.session-id
+
+# Common OS files
+.DS_Store
+Thumbs.db
+
+# Editor and IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# PHP dependency and cache directories
+vendor/
+.phpunit.result.cache
+
+# Build and temp artifacts
+dist/
+build/
+tmp/
+temp/
